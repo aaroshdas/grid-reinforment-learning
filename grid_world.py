@@ -1,5 +1,6 @@
-N = 4
+N = 6
 GOALS = [0,15]
+QUICKSAND = [3,2,7]
 #(row, col) = {(up/down/left/right) = q val}
 qVals = {}
 for i in range(N*N):
@@ -19,28 +20,31 @@ def updateQVals():
     valsChanged = False
     for i in qVals.keys():
         if(i[0]*N+i[1] not in GOALS):
+            coeff = -1
+            if(i[0]*N+i[1] in QUICKSAND):
+                coeff-=100
             for moves in qVals[i]:
                 
                 if(moves == "left"):
-                    val = -1+max(qVals[(i[0], i[1]-1)].values())
+                    val = max(qVals[(i[0], i[1]-1)].values())+coeff
                     if(val!= qVals[i]["left"]):
                         valsChanged = True
                     qVals[i]["left"] = val
                 
                 if(moves == "right"):
-                    val = -1+max(qVals[(i[0], i[1]+1)].values())
+                    val = max(qVals[(i[0], i[1]+1)].values())+coeff
                     if(val!= qVals[i]["right"]):
                         valsChanged = True
                     qVals[i]["right"] = val
 
                 if(moves == "up"):
-                    val = -1+max(qVals[(i[0]-1, i[1])].values())
+                    val = max(qVals[(i[0]-1, i[1])].values())+coeff
                     if(val!= qVals[i]["up"]):
                         valsChanged = True
                     qVals[i]["up"] = val
 
                 if(moves == "down"):
-                    val = -1+max(qVals[(i[0]+1, i[1])].values())
+                    val = max(qVals[(i[0]+1, i[1])].values())+coeff
                     if(val!= qVals[i]["down"]):
                         valsChanged = True
                     qVals[i]["down"] = val
@@ -50,15 +54,19 @@ def print_nicely():
     lowestQVals = []
     for moves in qVals:
         val = max(qVals[moves].values())
-        if(val>=0):
-            lowestQVals.append(" " + str(val))
+        spacesStr = "" 
+        for spaces in range(5-len(str(val))):
+            spacesStr+=" "
+        if(val<0):
+            lowestQVals.append(str(val)+spacesStr)
         else:
-            lowestQVals.append(str(val))
+            lowestQVals.append(" "+str(val)+spacesStr[:-1])
     rowStr = ""
     for i in range(len(lowestQVals)):
         rowStr+=str(lowestQVals[i]) +" "
         if(i%N ==N-1):
             print(rowStr)
+            print('')
             rowStr = ""
     print("")
 
