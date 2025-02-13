@@ -1,6 +1,6 @@
-N = 6
-GOALS = [0,15]
-QUICKSAND = [3,2,7]
+N = 5
+GOALS = [0]
+QUICKSAND = [1,6,11,16,23,18,13,8]
 #(row, col) = {(up/down/left/right) = q val}
 qVals = {}
 for i in range(N*N):
