@@ -1,14 +1,8 @@
 N = 5
-GOALS = [0,21]
-QUICKSAND = [10,2,14]
-MAGIC_ITEMS = [15,12,16]
-NUM_MAGIC_ITEMS_NEEDED = 2
-WARPS = [(19, 1, 0.1), (2, 5, 0.2), (7, 6, 0.3), (21, 4, 0.7)]
-
-WARPS_DICT = {}
-for warp in WARPS:
-    WARPS_DICT[warp[0]] = (warp[1], warp[2])
-
+GOALS = [0]
+QUICKSAND = [1,6,11,16]
+MAGIC_ITEMS = [9,14,19]
+NUM_MAGIC_ITEMS_NEEDED = 1
 #(row, col) = {(up/down/left/right) = q val}
 def create_tuples(lsOfTuples, currentTuple, length):
     if(len(currentTuple) == length):
@@ -58,60 +52,27 @@ def updateQVals():
             for moves in qVals[i]:
                 
                 if(moves == "left"):
-                    val1 = max(qVals[(i[0], i[1]-1) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                    newMove = i[0]*N+i[1]-1 
-                    if(newMove in WARPS_DICT):
-                        warpPos = WARPS_DICT[newMove][0]
-                        val2 = max(qVals[(warpPos//N, warpPos%N) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                        val = (1-WARPS_DICT[newMove][1]) * val1 + val2*WARPS_DICT[newMove][1]
-                    else:
-                        val = val1
-                        
+
+                    val = max(qVals[(i[0], i[1]-1) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
                     if(val!= qVals[i]["left"]):
                         valsChanged = True
                 
                     qVals[i]["left"] = val
                 
                 if(moves == "right"):
-                    val1 = max(qVals[(i[0], i[1]+1)+ getMagicTuple(i[0]*N+i[1], i[2:])].values() )+coeff
-                    newMove = i[0]*N+i[1]+1 
-
-                    if(newMove in WARPS_DICT):
-                        warpPos = WARPS_DICT[newMove][0]
-                        val2 = max(qVals[(warpPos//N, warpPos%N) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                        val = (1-WARPS_DICT[newMove][1]) * val1 + val2*WARPS_DICT[newMove][1]
-                    else:
-                        val = val1
+                    val = max(qVals[(i[0], i[1]+1)+ getMagicTuple(i[0]*N+i[1], i[2:])].values() )+coeff
                     if(val!= qVals[i]["right"]):
                         valsChanged = True
                     qVals[i]["right"] = val
 
                 if(moves == "up"):
-                    val1 = max(qVals[(i[0]-1, i[1])+ getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                    newMove = (i[0]-1)*N+i[1]
-
-                    if(newMove in WARPS_DICT):
-                        warpPos = WARPS_DICT[newMove][0]
-                        val2 = max(qVals[(warpPos//N, warpPos%N) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                        val = (1-WARPS_DICT[newMove][1]) * val1 + val2*WARPS_DICT[newMove][1]
-                    else:
-                        val = val1
-                        
+                    val = max(qVals[(i[0]-1, i[1])+ getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
                     if(val!= qVals[i]["up"]):
                         valsChanged = True
                     qVals[i]["up"] = val
 
                 if(moves == "down"):
-                    val1 = max(qVals[(i[0]+1, i[1])+ getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                    newMove = (i[0]+1)*N+i[1]
-
-                    if(newMove in WARPS_DICT):
-                        warpPos = WARPS_DICT[newMove][0]
-                        val2 = max(qVals[(warpPos//N, warpPos%N) + getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
-                        val = (1-WARPS_DICT[newMove][1]) * val1 + val2*WARPS_DICT[newMove][1]
-                    else:
-                        val = val1
-                    
+                    val = max(qVals[(i[0]+1, i[1])+ getMagicTuple(i[0]*N+i[1], i[2:])].values())+coeff
                     if(val!= qVals[i]["down"]):
                         valsChanged = True
                     qVals[i]["down"] = val
@@ -134,15 +95,15 @@ def print_nicely():
     for moves in maxQStates:
         val = max(qVals[moves].values())
         spacesStr = "" 
-        for spaces in range(7-len(str(val))):
+        for spaces in range(5-len(str(val))):
             spacesStr+=" "
         if(val<0):
             if(val <-100000):
-                maxQVals.append(" x    ")
+                maxQVals.append(" x   ")
             else:
-                maxQVals.append(str(val)[:6]+spacesStr)
+                maxQVals.append(str(val)+spacesStr)
         else:
-            maxQVals.append(" "+str(val)[:6]+spacesStr[:-1])
+            maxQVals.append(" "+str(val)+spacesStr[:-1])
     rowStr = ""
     for i in range(len(maxQVals)):
         rowStr+=str(maxQVals[i]) +" "
